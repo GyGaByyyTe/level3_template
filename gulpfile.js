@@ -24,7 +24,7 @@ const paths = {
   },
   styles: {
     src: 'src/styles/**/*.scss',
-    dest: 'build/assets/styles/'
+    dest: 'build/'
   },
   images: {
     src: 'src/images/**/*.*',
@@ -51,8 +51,8 @@ function templates() {
 // scss
 function styles() {
   return gulp
-    .src('./src/styles/styles.scss')
-    .pipe(sourcemaps.init())
+    .src('./src/styles/main.scss')
+    //.pipe(sourcemaps.init())
     .pipe(
       sass({
         outputStyle: 'compressed',
@@ -65,8 +65,8 @@ function styles() {
         cascade: false
       })
     )
-    .pipe(sourcemaps.write())
-    .pipe(rename({ suffix: '.min' }))
+    //.pipe(sourcemaps.write())
+    //.pipe(rename({ suffix: '.min' }))
     .pipe(gulp.dest(paths.styles.dest));
 }
 
@@ -128,12 +128,22 @@ function images() {
 function fonts() {
   return gulp.src(paths.fonts.src).pipe(gulp.dest(paths.fonts.dest));
 }
+// просто переносим исходники css
+function cssSource() {
+  return gulp.src(paths.styles.src).pipe(gulp.dest(paths.styles.dest));
+}
 
 exports.templates = templates;
 exports.styles = styles;
 exports.clean = clean;
 exports.images = images;
 exports.scripts = scriptsDev;
+
+gulp.task(
+  'css',
+  gulp.series(
+      clean,styles,cssSource)
+);
 
 gulp.task(
   'default',
